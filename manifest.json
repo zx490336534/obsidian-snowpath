@@ -1,7 +1,7 @@
 {
   "id": "snowpath",
   "name": "Snowpath",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "minAppVersion": "1.8.0",
   "description": "在 AI 生成的互动故事中进行 I+1 英语学习。",
   "author": "tingbai",

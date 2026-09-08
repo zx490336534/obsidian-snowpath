@@ -508,7 +508,7 @@ const STORY_LEVEL_RULES: Record<CefrLevel, {
   maxVocabulary: number;
   language: string;
 }> = {
-  A1: { minWords: 60, maxWords: 100, maxSentenceWords: 9, maxVocabulary: 3, language: "Use only very common A1 words, short subject-verb-object sentences, simple present or simple past, and repeat names instead of unclear pronouns." },
+  A1: { minWords: 45, maxWords: 70, maxSentenceWords: 7, maxVocabulary: 2, language: "Use only very common everyday A1 words and simple present tense. Give every sentence an explicit subject and only one action or fact. Repeat names and important nouns. Do not use passive voice, dependent clauses, idioms, phrasal verbs, metaphors, or abstract words." },
   A2: { minWords: 100, maxWords: 160, maxSentenceWords: 14, maxVocabulary: 4, language: "Use mostly A1 words plus a few common A2 words. Use one idea per sentence and simple present or past. Avoid idioms, phrasal verbs, metaphors, and uncommon descriptive words." },
   B1: { minWords: 140, maxWords: 210, maxSentenceWords: 20, maxVocabulary: 5, language: "Use common B1 vocabulary, clear paragraph structure, and direct language. Explain any uncommon expression through context." },
   B2: { minWords: 180, maxWords: 270, maxSentenceWords: 27, maxVocabulary: 6, language: "Use natural B2 prose with some varied sentence structures, while keeping uncommon idioms and specialist words out." },
@@ -566,6 +566,8 @@ Rules:
 - CEFR ${context.world.cefr} is a hard readability limit, not a theme. ${rules.language}
 - Write ${rules.minWords}-${rules.maxWords} English words in 2-5 paragraphs and provide one plain Chinese translation per paragraph.
 - Keep every sentence at or below ${rules.maxSentenceWords} English words. Keep each choice similarly short and simple.
+- Keep the language simple without making the plot childish. Start with a concrete surprise or urgent goal in the first two sentences.
+- Every chapter must change the situation through a clue, setback, reveal, or consequence, then end on a real dilemma. Avoid generic filler, routine summaries, and random events without a cause.
 - Keep characters, causal consequences, and unresolved story threads consistent.
 - Offer exactly three meaningful English choices. Do not decide for the learner.
 - Naturally use up to ${vocabularyLimit} target words. Any word above the learner's level must appear in vocabulary with a simple Chinese meaning. Do not add other difficult words for style.

@@ -149,6 +149,35 @@ test("gives A2 stories hard readability limits", () => {
   assert.throws(() => validateStoryDifficulty({ ...base, paragraphs: [Array.from({ length: 161 }, () => "word").join(" ") + "."] }, "A2", 6), /最多 160/);
 });
 
+test("keeps A1 chapters short, concrete, and story-forward", () => {
+  const context: StoryContext = {
+    world: {
+      id: "world", title: "Test", premise: "Premise", genre: "mystery", tone: "tense", cefr: "A1", status: "active",
+      currentChapter: 0, summary: "", characters: [], openThreads: [], decisions: [], createdAt: "", updatedAt: "",
+    },
+    recentChapters: [], targetWords: [], action: "begin", wordsPerChapter: 6,
+  };
+  const prompt = buildStoryPrompt(context);
+  assert.match(prompt, /45-70 English words/);
+  assert.match(prompt, /7 English words/);
+  assert.match(prompt, /first two sentences/);
+  assert.match(prompt, /change the situation/);
+
+  const story = validateStoryResponse({
+    title: "The red door",
+    paragraphs: [Array.from({ length: 10 }, () => "Mia walks to the small red door.").join(" ") + " Stop."],
+    translation: ["米娅走向那扇红色的小门。停下。"],
+    vocabulary: [],
+    choices: [
+      { id: "A", text: "Open it.", difficulty: "easier" },
+      { id: "B", text: "Call Ben.", difficulty: "steady" },
+      { id: "C", text: "Run away.", difficulty: "harder" },
+    ],
+    state: { summary: "Mia finds a red door.", characters: ["Mia"], openThreads: [], decisions: [] },
+  });
+  assert.throws(() => validateStoryDifficulty(story, "A1", 6), /最多 70/);
+});
+
 test("story seeds change the AI prompt", () => {
   const context: StoryContext = {
     world: {
