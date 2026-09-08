@@ -1,0 +1,20 @@
+{
+  "name": "obsidian-snowpath",
+  "version": "0.1.0",
+  "description": "Snowpath — an adaptive English story adventure for Obsidian",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "test": "node esbuild.config.mjs test && node --test .test-dist/*.test.cjs",
+    "package": "npm run build && rm -f snowpath.zip && zip -j snowpath.zip main.js manifest.json styles.css",
+    "install:local": "npm run build && mkdir -p /Users/zhongxin/myNote/.obsidian/plugins/snowpath && cp main.js manifest.json styles.css /Users/zhongxin/myNote/.obsidian/plugins/snowpath/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "builtin-modules": "^4.0.0",
+    "esbuild": "^0.25.0",
+    "obsidian": "^1.13.1",
+    "typescript": "^5.8.0"
+  }
+}
