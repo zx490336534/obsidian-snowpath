@@ -508,12 +508,12 @@ const STORY_LEVEL_RULES: Record<CefrLevel, {
   maxVocabulary: number;
   language: string;
 }> = {
-  A1: { minWords: 45, maxWords: 70, maxSentenceWords: 7, maxVocabulary: 2, language: "Use only very common everyday A1 words and simple present tense. Give every sentence an explicit subject and only one action or fact. Repeat names and important nouns. Do not use passive voice, dependent clauses, idioms, phrasal verbs, metaphors, or abstract words." },
-  A2: { minWords: 100, maxWords: 160, maxSentenceWords: 14, maxVocabulary: 4, language: "Use mostly A1 words plus a few common A2 words. Use one idea per sentence and simple present or past. Avoid idioms, phrasal verbs, metaphors, and uncommon descriptive words." },
-  B1: { minWords: 140, maxWords: 210, maxSentenceWords: 20, maxVocabulary: 5, language: "Use common B1 vocabulary, clear paragraph structure, and direct language. Explain any uncommon expression through context." },
-  B2: { minWords: 180, maxWords: 270, maxSentenceWords: 27, maxVocabulary: 6, language: "Use natural B2 prose with some varied sentence structures, while keeping uncommon idioms and specialist words out." },
-  C1: { minWords: 220, maxWords: 330, maxSentenceWords: 36, maxVocabulary: 8, language: "Use fluent C1 prose with nuance and varied syntax, but keep the narrative easy to follow." },
-  C2: { minWords: 240, maxWords: 380, maxSentenceWords: 45, maxVocabulary: 10, language: "Use precise, idiomatic C2 prose with full stylistic freedom." },
+  A1: { minWords: 190, maxWords: 260, maxSentenceWords: 7, maxVocabulary: 2, language: "Use only very common everyday A1 words and simple present tense. Give every sentence an explicit subject and only one action or fact. Repeat names and important nouns. Do not use passive voice, dependent clauses, idioms, phrasal verbs, metaphors, or abstract words." },
+  A2: { minWords: 240, maxWords: 320, maxSentenceWords: 14, maxVocabulary: 4, language: "Use mostly A1 words plus a few common A2 words. Use one idea per sentence and simple present or past. Avoid idioms, phrasal verbs, metaphors, and uncommon descriptive words." },
+  B1: { minWords: 300, maxWords: 390, maxSentenceWords: 20, maxVocabulary: 5, language: "Use common B1 vocabulary, clear paragraph structure, and direct language. Explain any uncommon expression through context." },
+  B2: { minWords: 380, maxWords: 480, maxSentenceWords: 27, maxVocabulary: 6, language: "Use natural B2 prose with some varied sentence structures, while keeping uncommon idioms and specialist words out." },
+  C1: { minWords: 470, maxWords: 590, maxSentenceWords: 36, maxVocabulary: 8, language: "Use fluent C1 prose with nuance and varied syntax, but keep the narrative easy to follow." },
+  C2: { minWords: 580, maxWords: 720, maxSentenceWords: 45, maxVocabulary: 10, language: "Use precise, idiomatic C2 prose with full stylistic freedom." },
 };
 
 function englishWordCount(text: string): number {
@@ -523,6 +523,7 @@ function englishWordCount(text: string): number {
 export function validateStoryDifficulty(story: StoryResponse, level: CefrLevel, requestedVocabulary: number): StoryResponse {
   const rules = STORY_LEVEL_RULES[level];
   const storyWords = englishWordCount(story.paragraphs.join(" "));
+  if (storyWords < rules.minWords) throw new Error(`章节有 ${storyWords} 个英文词，${level} 至少 ${rules.minWords} 个`);
   if (storyWords > rules.maxWords) throw new Error(`章节有 ${storyWords} 个英文词，${level} 最多 ${rules.maxWords} 个`);
   const sentenceWords = story.paragraphs.flatMap((paragraph) => paragraph.split(/[.!?]+/).map(englishWordCount));
   const longestSentence = Math.max(0, ...sentenceWords);
@@ -557,6 +558,7 @@ export function buildStoryPrompt(input: StoryContext): string {
   const context = trimStoryContext(input);
   const rules = STORY_LEVEL_RULES[context.world.cefr];
   const vocabularyLimit = Math.min(context.wordsPerChapter, rules.maxVocabulary);
+  const chapterWordTarget = Math.round((rules.minWords + rules.maxWords) / 2);
   return `You are the Snowpath interactive English story engine. Create the next chapter as comprehensible input at CEFR ${context.world.cefr}. The learner should understand most of the text while meeting a small amount of useful i+1 vocabulary.
 
 Return ONLY one JSON object with this exact shape:
@@ -564,8 +566,8 @@ Return ONLY one JSON object with this exact shape:
 
 Rules:
 - CEFR ${context.world.cefr} is a hard readability limit, not a theme. ${rules.language}
-- Write ${rules.minWords}-${rules.maxWords} English words in 2-5 paragraphs and provide one plain Chinese translation per paragraph.
-- Keep every sentence at or below ${rules.maxSentenceWords} English words. Keep each choice similarly short and simple.
+- The paragraphs field alone must contain ${rules.minWords}-${rules.maxWords} English words. Aim for about ${chapterWordTarget} words; do not count the title, choices, vocabulary, summary, or translations. Use 4-7 paragraphs and provide one plain Chinese translation per paragraph.
+${context.world.cefr === "A1" ? "- For A1, write 32-36 short story sentences; most should contain 6-7 words.\n" : ""}- Keep every sentence at or below ${rules.maxSentenceWords} English words. Keep each choice similarly short and simple.
 - Keep the language simple without making the plot childish. Start with a concrete surprise or urgent goal in the first two sentences.
 - Every chapter must change the situation through a clue, setback, reveal, or consequence, then end on a real dilemma. Avoid generic filler, routine summaries, and random events without a cause.
 - Keep characters, causal consequences, and unresolved story threads consistent.

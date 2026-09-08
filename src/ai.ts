@@ -144,13 +144,14 @@ export class SnowpathAI {
   }
 
   async generateStory(context: StoryContext, signal?: AbortSignal): Promise<StoryResponse> {
-    const response = await this.call(buildStoryPrompt(context), signal);
+    const prompt = buildStoryPrompt(context);
+    const response = await this.call(prompt, signal);
     const parse = (value: string) => validateStoryDifficulty(validateStoryResponse(extractJsonObject(value)), context.world.cefr, context.wordsPerChapter);
     try {
       return parse(response);
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
-      const repaired = await this.call(`Rewrite the following Snowpath chapter so it passes this requirement: ${reason}. Preserve its story events, but simplify and shorten it for CEFR ${context.world.cefr}. Return ONLY the corrected JSON object with the same schema. Do not add commentary.\n\n<invalid-response>\n${response.slice(0, 14_000)}\n</invalid-response>`, signal);
+      const repaired = await this.call(`${prompt}\n\nThe previous response below failed validation: ${reason}. Rewrite it instead of starting over. Preserve its story events and satisfy every rule above; expand with causal events if it is too short, simplify sentences if they are too complex, or trim if it is too long. Return ONLY the corrected JSON object.\n\n<invalid-response>\n${response.slice(0, 14_000)}\n</invalid-response>`, signal);
       try {
         return parse(repaired);
       } catch (repairError) {
