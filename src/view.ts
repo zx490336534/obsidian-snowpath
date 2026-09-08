@@ -221,7 +221,7 @@ export class SnowpathView extends ItemView {
 
     const chapters = await this.plugin.store.listChapters(world.id);
     const chapter = chapters.at(-1);
-    this.renderWorldHeader(main, world, chapters);
+    this.renderWorldHeader(main, world, worlds, chapters);
     if (!chapter) {
       const state = emptyState(main, "世界已经准备好", world.premise);
       actionButton(state, "生成开场", () => void this.generateChapter(world, "Begin the story and introduce an immediate, meaningful situation."), true);
@@ -230,14 +230,26 @@ export class SnowpathView extends ItemView {
     this.renderChapter(main, world, chapter);
   }
 
-  private renderWorldHeader(main: HTMLElement, world: WorldRecord, chapters: ChapterRecord[]): void {
+  private renderWorldHeader(main: HTMLElement, world: WorldRecord, worlds: WorldRecord[], chapters: ChapterRecord[]): void {
     const heading = main.createDiv({ cls: "snowpath-world-heading" });
     const copy = heading.createDiv();
     copy.createDiv({ text: `${world.genre.toLocaleUpperCase()} · ${world.cefr}`, cls: "snowpath-eyebrow" });
     copy.createEl("h1", { text: world.title });
     copy.createEl("p", { text: world.premise });
     const actions = heading.createDiv({ cls: "snowpath-inline-actions" });
-    actionButton(actions, "所有世界", () => { this.activeWorldId = ""; this.creating = true; void this.render(); });
+    const switcher = actions.createEl("label", { cls: "snowpath-world-switcher" });
+    switcher.createSpan({ text: "切换世界" });
+    const select = switcher.createEl("select", { attr: { "aria-label": "切换故事世界" } });
+    worlds.forEach((item) => select.createEl("option", { text: `${item.title} · ${item.currentChapter} 章`, value: item.id }));
+    select.value = world.id;
+    select.addEventListener("change", async () => {
+      this.activeWorldId = select.value;
+      this.plugin.settings.lastWorldId = select.value;
+      await this.plugin.saveSettings();
+      this.showTranslation = false;
+      this.chapterStartedAt = Date.now();
+      await this.render();
+    });
     actionButton(actions, "新建世界", () => { this.creating = true; void this.render(); });
 
     const trail = main.createDiv({ cls: "snowpath-trail", attr: { "aria-label": "章节雪径" } });

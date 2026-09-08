@@ -303,6 +303,27 @@
   gap: 8px;
 }
 
+.snowpath-world-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 4px 5px 4px 12px;
+  color: var(--text-muted);
+  border: 1px solid var(--snowpath-border);
+  border-radius: 11px;
+  background: var(--background-primary);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.snowpath-world-switcher select {
+  max-width: min(320px, 34vw);
+  border: 0;
+  background: var(--background-secondary);
+  box-shadow: none;
+}
+
 .snowpath-trail {
   position: relative;
   display: flex;
@@ -2106,6 +2127,11 @@
   .snowpath-main {
     width: min(100% - 28px, 1100px);
     padding-top: 32px;
+  }
+
+  .snowpath-world-switcher,
+  .snowpath-world-switcher select {
+    max-width: 100%;
   }
 
   .snowpath-nav-item {
