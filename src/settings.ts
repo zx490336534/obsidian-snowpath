@@ -89,9 +89,9 @@ export class SnowpathSettingTab extends PluginSettingTab {
 
     containerEl.createEl("h2", { text: "关于" });
     const about = containerEl.createEl("p", { cls: "setting-item-description" });
-    about.appendText("Snowpath 是独立实现的 Obsidian 英语冒险插件，灵感来自 ");
+    about.appendText("Snowpath 是一款 Obsidian 英语冒险插件，灵感来自 ");
     about.createEl("a", { text: "I+1 Quest", href: "https://snowball-diary.github.io/iplus1-quest/" });
-    about.appendText("。未复制原项目的代码、Logo 或图片。");
+    about.appendText("。");
   }
 
   private renderCliSettings(containerEl: HTMLElement): void {

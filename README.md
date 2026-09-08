@@ -2,7 +2,7 @@
 
 Snowpath 是一个桌面端 Obsidian 插件：根据 CEFR 难度生成可选择、可续写的英文故事，并把章节、生词与学习进度保存在 Markdown 中。
 
-灵感来自 [I+1 Quest](https://snowball-diary.github.io/iplus1-quest/)。本项目为独立实现，不包含原项目代码、Logo 或图片。
+灵感来自 [I+1 Quest](https://snowball-diary.github.io/iplus1-quest/)。
 
 ## 在 Obsidian 中安装
 
@@ -21,7 +21,7 @@ Snowpath 目前仅支持 macOS / Windows 桌面版 Obsidian。
 4. 选择最新版本并完成安装。
 5. 回到「设置 → 第三方插件」，启用 **Snowpath**。
 
-BRAT 会从最新 GitHub Release 读取 `manifest.json`、`main.js` 和 `styles.css`。当前仓库为私有仓库，安装账号必须拥有访问权限，并在 BRAT 中配置仅授予本仓库 `Contents: Read-only` 权限的 GitHub fine-grained token。详见 [BRAT 开发者指南](https://github.com/TfTHacker/obsidian42-brat/blob/main/BRAT-DEVELOPER-GUIDE.md#access-to-private-repositories)。
+BRAT 会从最新 GitHub Release 读取 `manifest.json`、`main.js` 和 `styles.css`。
 
 ### 方式二：手动拷贝
 
@@ -66,7 +66,7 @@ Copy-Item main.js, manifest.json, styles.css $dest
 4. 在「冒险 → 新建世界」中组合故事方向，预览大纲后创建世界。
 5. 阅读时可以逐句或全文朗读、查看翻译、积累生词，并在「复习」中完成闪卡练习。
 
-学习数据默认保存在 vault 的 `2-领域/学习/英语/Snowpath/`，可在 Snowpath 设置中修改。卸载插件不会自动删除这些 Markdown 学习记录。
+学习数据默认保存在 vault 根目录的 `Snowpath/`，可在 Snowpath 设置中修改。卸载插件不会自动删除这些 Markdown 学习记录。
 
 ## 本地开发
 

@@ -21,7 +21,7 @@ export interface SnowpathSettings {
 }
 
 export const DEFAULT_SETTINGS: SnowpathSettings = {
-  dataRoot: "2-领域/学习/英语/Snowpath",
+  dataRoot: "Snowpath",
   provider: "codex-cli",
   apiBaseUrl: "https://api.openai.com/v1",
   apiModel: "gpt-4.1-mini",
